@@ -4,7 +4,10 @@ using System.Text;
 
 namespace Uplift.DataAccess.Data.Repository.Interface
 {
-    interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
+        ICategoryRepository Category { get; }
+
+        void Save();
     }
 }
