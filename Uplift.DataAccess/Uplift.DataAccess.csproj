@@ -13,8 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
-    <Folder Include="Data\Initializer\" />
+    <Folder Include="Initializer\" />
   </ItemGroup>
 
   <ItemGroup>
