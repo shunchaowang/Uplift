@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 using Uplift.DataAccess.Data.Repository.Interface;
+using Uplift.Models;
 
 namespace Uplift.Areas.Admin.Controllers
 {
@@ -20,5 +22,45 @@ namespace Uplift.Areas.Admin.Controllers
         {
             return View();
         }
+
+        public IActionResult Upsert(int? id)
+        {
+            Category category = new Category();
+            if(id == null) // inserting 
+            {
+                return View(category);
+            }
+
+            category = unitOfWork.Category.Get(id.GetValueOrDefault());
+            if(category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
+        }
+
+        #region API CALLS
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Json( new { data = this.unitOfWork.Category.GetAll() });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            var objFromDb = unitOfWork.Category.Get(id);
+            if(objFromDb == null)
+            {
+                return Json(new { success = false, Message = "Error while deleting." });
+            }
+
+            unitOfWork.Category.Remove(objFromDb);
+            unitOfWork.Save();
+
+            return Json(new { success = true, Message = "Delete successful." });
+        }
+
+        #endregion
     }
 }
