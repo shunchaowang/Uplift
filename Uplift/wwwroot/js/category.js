@@ -23,7 +23,7 @@ function loadDataTable() {
                                     Edit
                                 </a>
                                 &nbsp;
-                                <a onclick=Delete("/Admin/Category/Delete/${data}") class="btn btn-success text-white" style="cursor:pointer; width: 100px;">
+                                <a onclick=remove("/Admin/Category/Delete/${data}") class="btn btn-success text-white" style="cursor:pointer; width: 100px;">
                                     Delete
                                 </a>
                             </div>
@@ -37,4 +37,34 @@ function loadDataTable() {
         },
         "width": "100%"
     });
+}
+
+function remove(url) {
+    swal({
+        title: 'Are you sure you want to delete?',
+        text: 'You will not be able to restore the content!',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'Yes, delete it!',
+        closeOnConfirm: true
+    }, function () {
+        $.ajax({
+            type: 'DELETE',
+            url: url,
+            success: function (data) {
+                if (data.success) {
+                    showMessage(data.message);
+                    dataTable.ajax.reload();
+                }
+                else {
+                    toastr.error(data.message);
+                }
+            }
+        });
+    });
+}
+
+function showMessage(msg) {
+    toastr.success(msg);
 }
