@@ -13,6 +13,7 @@ namespace Uplift.Models
         [Display(Name = "Frequency Name")]
         public string Name { get; set; }
         [Required]
+        [Display(Name = "Frequency Count")]
         public int Count { get; set; }
     }
 }

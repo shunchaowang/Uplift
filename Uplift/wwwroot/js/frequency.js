@@ -8,22 +8,22 @@ function loadDataTable() {
 
     dataTable = $("#tblData").DataTable({
         "ajax": {
-            "url": "/Admin/Category/GetAll",
+            "url": "/Admin/Frequency/GetAll",
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            {"data": "name", "width": "50%"},
-            {"data": "displayOrder", "width": "20%"},
+            { "data": "name", "width": "50%" },
+            { "data": "count", "width": "20%" },
             {
                 "data": "id",
                 "render": function (data) {
                     return `<div class="text-center">
-                                <a href="/Admin/Category/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer; width: 100px;">
+                                <a href = "/Admin/Frequency/Upsert/${data}" class="btn btn-success text-white" style="cursor:pointer; width: 100px;">
                                     Edit
                                 </a>
                                 &nbsp;
-                                <a onclick=remove("/Admin/Category/Delete/${data}") class="btn btn-success text-white" style="cursor:pointer; width: 100px;">
+                                <a onclick = remove("/Admin/Frequency/Delete/${data}") class="btn btn-success text-white" style="cursor:pointer; width: 100px;">
                                     Delete
                                 </a>
                             </div>
