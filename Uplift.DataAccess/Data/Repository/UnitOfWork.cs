@@ -8,15 +8,17 @@ namespace Uplift.DataAccess.Data.Repository
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext dbContext;
+        public ICategoryRepository Category { get; private set; }
+        public IFrequencyRepository Frequency { get; private set; }
+        public IServiceRepository Service { get; private set; }
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
-            Category = new CategoryRepository(this.dbContext);
-            Frequency = new FrequencyRepository(this.dbContext);
+            Category = new CategoryRepository(dbContext);
+            Frequency = new FrequencyRepository(dbContext);
+            Service = new ServiceRepository(dbContext);
         }
 
-        public ICategoryRepository Category { get; private set; }
-        public IFrequencyRepository Frequency { get; private set; }
 
         public void Dispose()
         {
