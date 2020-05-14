@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Uplift.DataAccess.Data.Repository.Interface;
 using Uplift.Models;
@@ -13,11 +15,13 @@ namespace Uplift.Areas.Admin.Controllers
     public class ServiceController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IWebHostEnvironment webHostEnvironment;
         [BindProperty]
         public ServiceVM ServiceVM { get; set; }
-        public ServiceController(IUnitOfWork unitOfWork)
+        public ServiceController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             this.unitOfWork = unitOfWork;
+            this.webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -45,19 +49,53 @@ namespace Uplift.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                string webRootPath = webHostEnvironment.WebRootPath;
+                var files = HttpContext.Request.Form.Files;
                 if(ServiceVM.Service.Id == 0)
                 {
-                    //TODO: imageUrl
+                    string fileName = Guid.NewGuid().ToString();
+                    var uploads = Path.Combine(webRootPath, @"images\services");
+                    var extension = Path.GetExtension(files[0].FileName);
+
+                    using(var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStreams);
+                    }
+
+                    ServiceVM.Service.ImageUrl = @"\images\services\" + fileName + extension;
+
                     unitOfWork.Service.Add(ServiceVM.Service);
                 }
                 else
                 {
                     var objFromDb = unitOfWork.Service.Get(ServiceVM.Service.Id);
-                    //TODO: imageUrl
+
+                    if (files.Count > 0)
+                    {
+                        string fileName = Guid.NewGuid().ToString();
+                        var uploads = Path.Combine(webRootPath, @"images\services");
+                        var extension_new = Path.GetExtension(files[0].FileName);
+
+                        var imagePath = Path.Combine(webRootPath, objFromDb.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(imagePath))
+                        {
+                            System.IO.File.Delete(imagePath);
+                        }
+
+                        using (var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension_new), FileMode.Create))
+                        {
+                            files[0].CopyTo(fileStreams);
+                        }
+                        ServiceVM.Service.ImageUrl = @"\images\services\" + fileName + extension_new;
+                    }
+                    else
+                    {
+                        ServiceVM.Service.ImageUrl = objFromDb.ImageUrl;
+                    }
                     unitOfWork.Service.Update(ServiceVM.Service);
                 }
                 unitOfWork.Save();
-                RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
             else
             {
@@ -76,6 +114,13 @@ namespace Uplift.Areas.Admin.Controllers
         public IActionResult Delete(int id)
         {
             var serviceFromDb = unitOfWork.Service.Get(id);
+
+            string webRootPath = webHostEnvironment.WebRootPath;
+            var imagePath = Path.Combine(webRootPath, serviceFromDb.ImageUrl.TrimStart('\\'));
+            if (System.IO.File.Exists(imagePath))
+            {
+                System.IO.File.Delete(imagePath);
+            }
 
             if (serviceFromDb == null)
             {
