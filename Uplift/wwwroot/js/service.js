@@ -25,7 +25,7 @@ function loadDataTable() {
                                     Edit
                                 </a>
                                 &nbsp;
-                                <a onclick=remove("/Admin/Service/Delete/${data}") class="btn btn-success text-white" style="cursor:pointer; width: 100px;">
+                                <a onclick=remove("/Admin/Service/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer; width: 100px;">
                                     Delete
                                 </a>
                             </div>
