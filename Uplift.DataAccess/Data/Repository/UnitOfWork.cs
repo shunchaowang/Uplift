@@ -11,12 +11,14 @@ namespace Uplift.DataAccess.Data.Repository
         public ICategoryRepository Category { get; private set; }
         public IFrequencyRepository Frequency { get; private set; }
         public IServiceRepository Service { get; private set; }
+        public IUserRepository User { get; private set; }
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
             Category = new CategoryRepository(dbContext);
             Frequency = new FrequencyRepository(dbContext);
             Service = new ServiceRepository(dbContext);
+            User = new UserRepository(dbContext);
         }
 
 
