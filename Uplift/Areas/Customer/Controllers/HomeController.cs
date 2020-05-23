@@ -3,25 +3,62 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Uplift.DataAccess.Data.Repository.Interface;
+using Uplift.Extensions;
 using Uplift.Models;
+using Uplift.Models.ViewModels;
+using Uplift.Utility;
 
 namespace Uplift.Controllers
 {
     [Area("Customer")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IUnitOfWork unitOfWork;
+        private HomeViewModel homeViewModel;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IUnitOfWork unitOfWork)
         {
-            _logger = logger;
+            this.unitOfWork = unitOfWork;
         }
 
         public IActionResult Index()
         {
-            return View();
+            homeViewModel = new HomeViewModel()
+            {
+                CategoryList = unitOfWork.Category.GetAll(),
+                ServiceList = unitOfWork.Service.GetAll(includeProperties: "Frequency")
+            };
+
+            return View(homeViewModel);
+        }
+
+        public IActionResult Detail(int id)
+        {
+            var serviceFromDb = unitOfWork.Service.GetFirstOrDefault(includeProperties: "Category,Frequency", filter: s => s.Id == id);
+            return View(serviceFromDb);
+        }
+        public IActionResult AddToCart(int serviceId)
+        {
+            List<int> sessionList = new List<int>();
+            if(string.IsNullOrEmpty(HttpContext.Session.GetString(SD.SessionCart)))
+            {
+                sessionList.Add(serviceId);
+                HttpContext.Session.SetObject(SD.SessionCart, sessionList);
+            }
+            else
+            {
+                sessionList = HttpContext.Session.GetObject<List<int>>(SD.SessionCart);
+                if (!sessionList.Contains(serviceId))
+                {
+                    sessionList.Add(serviceId);
+                    HttpContext.Session.SetObject(SD.SessionCart, sessionList);
+                }
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Privacy()
