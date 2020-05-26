@@ -59,9 +59,10 @@ namespace Uplift.Areas.Customer.Controllers
             if (HttpContext.Session.GetObject<List<int>>(SD.SessionCart) != null)
             {
                 List<int> sessionList = HttpContext.Session.GetObject<List<int>>(SD.SessionCart);
+                CartVM.ServiceList = new List<Service>();
                 foreach (int serviceId in sessionList)
                 {
-                    CartVM.ServiceList.Add(unitOfWork.Service.GetFirstOrDefault(s => s.Id == serviceId));
+                    CartVM.ServiceList.Add(unitOfWork.Service.GetFirstOrDefault(s => s.Id == serviceId, includeProperties: "Frequency,Category"));
                 }
             }
 

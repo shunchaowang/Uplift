@@ -86,16 +86,16 @@
                                 <ul class="list-group mb-3">
                                     @{ var total = 0.0;}
 
-                                    @foreach (var details in Model.ServiceList)
+                                    @foreach (var service in Model.ServiceList)
                                     {
                                         <li class="list-group-item d-flex justify-content-between">
                                             <div>
-                                                <input type="hidden" asp-for="@details.Id" />
-                                                <h6 class="my-0">@details.Name</h6>
-                                                <small class="text-muted">Frequency : @details.Frequency.Count</small>
+                                                <input type="hidden" asp-for="@service.Id" />
+                                                <h6 class="my-0">@service.Name</h6>
+                                                <small class="text-muted">Frequency : @service.Frequency.Count</small>
                                             </div>
-                                            <span class="text-muted">$@(details.Price*details.Frequency.Count)</span>
-                                            @{ total += (details.Price * details.Frequency.Count);}
+                                            <span class="text-muted">$@(service.Price*service.Frequency.Count)</span>
+                                            @{ total += (service.Price * service.Frequency.Count);}
                                         </li>
                                     }
 
