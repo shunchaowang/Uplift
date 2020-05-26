@@ -13,6 +13,8 @@ namespace Uplift.DataAccess.Data.Repository.Interface
         IOrderHeaderRepository OrderHeader { get; }
         IOrderDetailRepository OrderDetail { get; }
 
+        ISPCall SPCall { get; }
+
         void Save();
     }
 }

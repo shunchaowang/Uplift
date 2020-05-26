@@ -14,6 +14,7 @@ namespace Uplift.DataAccess.Data.Repository
         public IUserRepository User { get; private set; }
         public IOrderHeaderRepository OrderHeader { get; private set; }
         public IOrderDetailRepository OrderDetail { get; private set; }
+        public ISPCall SPCall { get; private set; }
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
@@ -23,6 +24,7 @@ namespace Uplift.DataAccess.Data.Repository
             User = new UserRepository(dbContext);
             OrderHeader = new OrderHeaderRepository(dbContext);
             OrderDetail = new OrderDetailRepository(dbContext);
+            SPCall = new SPCall(dbContext);
         }
 
 
