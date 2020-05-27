@@ -102,11 +102,12 @@ namespace Uplift.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
 
-                    if (!await roleManager.RoleExistsAsync(SD.Admin))
-                    {
-                        await roleManager.CreateAsync(new IdentityRole(SD.Admin));
-                        await roleManager.CreateAsync(new IdentityRole(SD.Manager));
-                    }
+                    // Role management is seeded by DbInitializer.
+                    //if (!await roleManager.RoleExistsAsync(SD.Admin))
+                    //{
+                    //    await roleManager.CreateAsync(new IdentityRole(SD.Admin));
+                    //    await roleManager.CreateAsync(new IdentityRole(SD.Manager));
+                    //}
 
                     string role = Request.Form["rdUserRole"].ToString();
                     switch (role)
