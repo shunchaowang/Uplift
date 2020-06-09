@@ -44,13 +44,13 @@ namespace Uplift.DataAccess.Initializer
             // seed an admin user
             userManager.CreateAsync(new ApplicationUser
             {
-                UserName = "admin@admin.com",
-                Email = "admin@admin.com",
+                UserName = "admin@me.com",
+                Email = "admin@me.com",
                 EmailConfirmed = true,
-                Name = "Shunchao Wang"
+                Name = "Admin Admin"
             }, "Password1!").GetAwaiter().GetResult();
 
-            ApplicationUser user = dbContext.ApplicationUser.Where(u => u.Email == "admin@admin.com").FirstOrDefault();
+            ApplicationUser user = dbContext.ApplicationUser.Where(u => u.Email == "admin@me.com").FirstOrDefault();
             userManager.AddToRoleAsync(user, SD.Admin).GetAwaiter().GetResult();
         }
     }
