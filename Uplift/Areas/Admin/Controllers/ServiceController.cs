@@ -56,7 +56,7 @@ namespace Uplift.Areas.Admin.Controllers
                 if(ServiceVM.Service.Id == 0)
                 {
                     string fileName = Guid.NewGuid().ToString();
-                    var uploads = Path.Combine(webRootPath, @"images\services");
+                    var uploads = Path.Combine(webRootPath, @"images/services");
                     var extension = Path.GetExtension(files[0].FileName);
 
                     using(var fileStreams = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
@@ -64,7 +64,7 @@ namespace Uplift.Areas.Admin.Controllers
                         files[0].CopyTo(fileStreams);
                     }
 
-                    ServiceVM.Service.ImageUrl = @"\images\services\" + fileName + extension;
+                    ServiceVM.Service.ImageUrl = @"/images/services/" + fileName + extension;
 
                     unitOfWork.Service.Add(ServiceVM.Service);
                 }
@@ -75,7 +75,7 @@ namespace Uplift.Areas.Admin.Controllers
                     if (files.Count > 0)
                     {
                         string fileName = Guid.NewGuid().ToString();
-                        var uploads = Path.Combine(webRootPath, @"images\services");
+                        var uploads = Path.Combine(webRootPath, @"images/services");
                         var extension_new = Path.GetExtension(files[0].FileName);
 
                         var imagePath = Path.Combine(webRootPath, objFromDb.ImageUrl.TrimStart('\\'));
@@ -88,7 +88,7 @@ namespace Uplift.Areas.Admin.Controllers
                         {
                             files[0].CopyTo(fileStreams);
                         }
-                        ServiceVM.Service.ImageUrl = @"\images\services\" + fileName + extension_new;
+                        ServiceVM.Service.ImageUrl = @"/images/services/" + fileName + extension_new;
                     }
                     else
                     {
